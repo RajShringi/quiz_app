@@ -1,36 +1,29 @@
 import React from "react";
-import Categories from "./Categories";
+import { Switch, Route } from "react-router-dom";
+import Header from "./Header";
+import Home from "./Home";
+import Question from "./Question";
+import Result from "./Result";
+import { myfetch } from "./utils/myFetch";
+
 class App extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      categories: null,
-      userSelectedCategoryId: null,
-    };
-  }
-  async componentDidMount() {
-    const url = "https://opentdb.com/api_category.php";
-    const res = await fetch(url);
-    const data = await res.json();
-    this.setState({
-      categories: data.trivia_categories,
-    });
-  }
-  handleClickCategory = (categoryId) => {
-    this.setState({
-      userSelectedCategoryId: categoryId,
-    });
-  };
   render() {
     return (
-      <div className="container mx-auto text-gray-700">
-        {this.state.categories && (
-          <Categories
-            categories={this.state.categories}
-            handleClickCategory={this.handleClickCategory}
+      <>
+        <Header />
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route
+            path="/question/:categoryId/:difficulty"
+            component={Question}
           />
-        )}
-      </div>
+          {/* <Route path="/result">
+            <Result result={result} score={score} />
+          </Route> */}
+        </Switch>
+      </>
     );
   }
 }
