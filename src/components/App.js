@@ -3,8 +3,6 @@ import { Switch, Route } from "react-router-dom";
 import Header from "./Header";
 import Home from "./Home";
 import Question from "./Question";
-import Result from "./Result";
-import { myfetch } from "./utils/myFetch";
 
 class App extends React.Component {
   render() {

@@ -16,8 +16,8 @@ function Result({ result, score }) {
             <tr key={index}>
               <td className="py-4 px-6 border text-left">{r.question}</td>
               <td className="py-4 px-6 border">{r.correct_answer}</td>
-              <td className="py-4 px-6 border">{r.answer}</td>
-              <td className="py-4 px-6 border">{r.rightorWrong}</td>
+              <td className="py-4 px-6 border">{r.userAnswer}</td>
+              <td className="py-4 px-6 border">{r.isright}</td>
             </tr>
           );
         })}
