@@ -31,9 +31,9 @@ class Question extends React.Component {
   };
 
   getQuestions = async () => {
-    const { categoryId, difficulty } = this.props.match.params;
+    const { userSelectedCategoryId, difficulty } = this.props;
     const data = await myfetch(
-      `https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=${difficulty}`
+      `https://opentdb.com/api.php?amount=10&category=${userSelectedCategoryId}&difficulty=${difficulty}`
     );
     this.setState({
       questions: data.results,
@@ -65,25 +65,33 @@ class Question extends React.Component {
   };
 
   componentDidMount() {
-    console.log("component did mount");
-    this.getQuestions();
+    if (localStorage.state) {
+      this.setState({
+        questions: JSON.parse(localStorage.state).questions || [],
+        activeIndex: JSON.parse(localStorage.state).activeIndex || 0,
+        score: JSON.parse(localStorage.state).score || 0,
+        result: JSON.parse(localStorage.state).result || [],
+      });
+    } else {
+      this.getQuestions();
+    }
     window.addEventListener("beforeunload", this.handleUpdateLocalStorage);
   }
 
   componentWillUnmount() {
-    console.log("component will unmount");
     window.removeEventListener("beforeunload", this.handleUpdateLocalStorage);
   }
 
   handleUpdateLocalStorage = () => {
-    // const { categoryId, difficulty } = this.props.match.params;
-    localStorage.setItem("questions", JSON.stringify(this.state.questions));
-    localStorage.setItem("result", JSON.stringify(this.state.result));
+    const { userSelectedCategoryId, difficulty } = this.props;
+    localStorage.setItem(
+      "state",
+      JSON.stringify({ ...this.state, userSelectedCategoryId, difficulty })
+    );
   };
 
   render() {
     const { activeIndex, questions, result, isSubmited, score } = this.state;
-    console.log({ questions }, "inside render");
     return (
       <>
         {!questions && <Loader />}
