@@ -3,7 +3,8 @@ import Loader from "./Loader";
 import SingleQuestion from "./SingleQuestion";
 import Result from "./Result";
 import { myfetch } from "./utils/myFetch";
-class Questions extends React.Component {
+
+class Question extends React.Component {
   constructor(props) {
     super();
     this.state = {
@@ -30,16 +31,16 @@ class Questions extends React.Component {
   };
 
   getQuestions = async () => {
-    const category = this.props.match.params.categoryId;
-    const difficulty = this.props.match.params.difficulty;
+    const { categoryId, difficulty } = this.props.match.params;
     const data = await myfetch(
-      `https://opentdb.com/api.php?amount=10&category=${category}&difficulty=${difficulty}`
+      `https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=${difficulty}`
     );
     this.setState({
       questions: data.results,
     });
     console.log(data);
   };
+
   handleAnswer = (answer) => {
     let { result, score, activeIndex, questions } = this.state;
     let obj = {
@@ -66,16 +67,27 @@ class Questions extends React.Component {
   componentDidMount() {
     console.log("component did mount");
     this.getQuestions();
+    window.addEventListener("beforeunload", this.handleUpdateLocalStorage);
   }
+
   componentWillUnmount() {
-    console.log("component will unmoutn");
+    console.log("component will unmount");
+    window.removeEventListener("beforeunload", this.handleUpdateLocalStorage);
   }
+
+  handleUpdateLocalStorage = () => {
+    // const { categoryId, difficulty } = this.props.match.params;
+    localStorage.setItem("questions", JSON.stringify(this.state.questions));
+    localStorage.setItem("result", JSON.stringify(this.state.result));
+  };
+
   render() {
     const { activeIndex, questions, result, isSubmited, score } = this.state;
     console.log({ questions }, "inside render");
     return (
       <>
         {!questions && <Loader />}
+
         {!isSubmited && questions && (
           <div className="bg-gray-100 max-w-3xl mx-auto p-4 my-4 rounded-lg h-[450px]">
             <SingleQuestion
@@ -120,4 +132,4 @@ class Questions extends React.Component {
     );
   }
 }
-export default Questions;
+export default Question;

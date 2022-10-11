@@ -10,16 +10,13 @@ class App extends React.Component {
       <>
         <Header />
         <Switch>
-          <Route exact path="/">
+          <Route path="/" exact>
             <Home />
           </Route>
           <Route
             path="/question/:categoryId/:difficulty"
             component={Question}
           />
-          {/* <Route path="/result">
-            <Result result={result} score={score} />
-          </Route> */}
         </Switch>
       </>
     );
